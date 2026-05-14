@@ -10,7 +10,7 @@ admin.site.register(User, UserAdmin)
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = ("title", "owner", "created_time")
-    list_filter = ("created_time", "owner")
+    list_filter = ("created_time", "content")
 
 
 @admin.register(Commentary)
