@@ -27,17 +27,13 @@ class PostDetailView(FormMixin, generic.DetailView):
         return reverse("blog:post-detail", kwargs={"pk": self.object.pk})
 
     def post(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return redirect("login")
         self.object = self.get_object()
         form = self.get_form()
+        
+        if not request.user.is_authenticated:
+            form.add_error(None, "You must be logged in to leave a comment.")
+            return self.form_invalid(form)
+            
         if form.is_valid():
             return self.form_valid(form)
         return self.form_invalid(form)
-
-    def form_valid(self, form):
-        comment = form.save(commit=False)
-        comment.post = self.object
-        comment.user = self.request.user
-        comment.save()
-        return super().form_valid(form)
